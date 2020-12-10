@@ -76,7 +76,7 @@ int Diff_Integrate::main() {
     Integrate test(f);
     /*const double A = 1;*/
     /*printf("%.15lf\n%.15lf\n%.15lf\n", test.simpson(-A, A), test.gauss(-A, A),romberg_integrate(f,{-A,A},0.000000001));*/
-    cout<<Diff_Integrate::infinity_integrate(g)<<endl;
+    printf("%.15lf\n",Diff_Integrate::infinity_integrate(g));
     // 把A改成2500，可以发现高斯法（fx-991CN X等所用积分法）出现了错误
     // 错误的主要来源原因是高斯法需将函数变换至[-1,1]区间计算
     // 而将[-2500,2500]上的正态分布概率密度函数线性变换到[-1,1]上时变得类似单位冲激函数，

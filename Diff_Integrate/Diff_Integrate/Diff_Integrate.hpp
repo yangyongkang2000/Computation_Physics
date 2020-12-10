@@ -48,6 +48,22 @@ public:
         }
         return _diff_num_;
     }
+    template<unsigned int N,typename function_type>
+    vector<T> richason_diff(const function_type&func,const vector<T>&x_list)
+    {
+        vector<T> list;
+        T eps=pow(10,-15.0/N);
+        _init_p<N>();
+        if(N<=12)
+        {
+            for(auto &x:x_list)
+             list.push_back((calc___<N>(func, {x,4.0*eps})-20*calc___<N>(func,{x,2.0*eps})+64*calc___<N>(func,{x,eps}))/45.);
+        }
+       else
+           for(auto &x:x_list)
+               list.push_back((4*calc___<N>(func, {x,eps})-calc___<N>(func, {x,2.0*eps}))/3.0);
+        return list;
+    }
     void print(int n)
     {
         for(int i=0;i<=2*n;cout<<(_p.first)[i++]<<endl);
