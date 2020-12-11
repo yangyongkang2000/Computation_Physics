@@ -18,10 +18,10 @@ public:
         if(_list_.size()==0)
             return 0.0;
         if(x<=_list_[0])
-            return coeff_point(_result_[0], x);
+            return coeff_point<decltype(_result_[0]),T>(_result_[0], x);
         if(x>=_list_[_list_.size()-1])
-            return coeff_point(_result_[_result_.size()-1],x);
-        return coeff_point(_result_[distance(_list_.begin(), lower_bound(_list_.begin(), _list_.end(), x))-1], x);
+            return coeff_point<decltype(_result_[0]),T>(_result_[_result_.size()-1],x);
+        return coeff_point<decltype(_result_[0]),T>(_result_[distance(_list_.begin(), lower_bound(_list_.begin(), _list_.end(), x))-1], x);
     }
 private:
     point_type _list_;
@@ -44,7 +44,7 @@ inline auto cubic_spline_fit(const point_type &list) ->Interpolation<decltype(li
         _list_.push_back(6*((list[1][i+1]-list[1][i])/_gamma-(list[1][i]-list[1][i-1])/alpha));
     }
     vector<T> _result {0};
-    for(auto &_:LinearSolve::tri_solve(matrix, _list_))
+    for(auto &_:LinearSolve::tri_solve<decltype(matrix),decltype(_list_),T>(matrix, _list_))
         _result.push_back(_);
     _result.push_back(0);
     for(int i=0;i<N-1;i++)
@@ -63,7 +63,6 @@ inline auto cubic_spline_fit(const point_type &list) ->Interpolation<decltype(li
     }
     return Interpolation<decltype(list[0]),T>(list[0],result);
 }
-
 }
 
 #endif /* cubic_spline_h */

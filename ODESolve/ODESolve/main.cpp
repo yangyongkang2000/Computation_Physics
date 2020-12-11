@@ -5,12 +5,12 @@
 //  Created by 杨永康 on 2020/11/28.
 //
 #include"include.hpp"
-#include "odesolve.h"
+#include "odesolve.hpp"
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     using namespace std;
-    int i=1;
+    /*int i=1;
     vector<function<double(const double& ,const vector<double>&)>> f;
     f.push_back([](const double &x,const vector<double>& v){return v[0];});
     f.push_back([&i](const double &x,const vector<double>& v){return v[i];});
@@ -19,6 +19,12 @@ int main(int argc, const char * argv[]) {
     for(auto &v:h)
     {
         cout<<v.first<<","<<v.second[0]<<endl;
+    }*/
+    auto f=[](double x,double y){return x-y;};
+    vector<pair<double,double>> g=odesolve::runge_kutta(f, pair<double,double>{0.,0.}, -1.);
+    for(auto &v:g)
+    {
+        cout<<v.first<<","<<v.second<<endl;
     }
     return 0;
 }

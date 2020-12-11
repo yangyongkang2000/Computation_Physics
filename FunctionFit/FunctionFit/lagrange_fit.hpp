@@ -19,19 +19,7 @@ inline vector<T> lagrange_fit(point_type &list)
         for(int j=N-2;j>=0;j--)
         matrix[i][j]=list[0][i]*matrix[i][j+1];
     }
-    return LinearSolve::LU_LinearSolve(matrix, list[1]);
-}
-template<const unsigned int N,typename point_type,typename T=double>
-inline vector<T> lagrange_fit( point_type & list)
-{
-    array<array<double,N>,N> matrix{};
-    for(int i=N-1;i>=0;i--)
-    {
-        matrix[i][N-1]=1;
-        for(int j=N-2;j>=0;j--)
-        matrix[i][j]=list[0][i]*matrix[i][j+1];
-    }
-    return LinearSolve::LU_LinearSolve<N>(matrix, list[1]);
+    return LinearSolve::LU_LinearSolve<decltype(matrix),decltype(list[1]),T>(matrix, list[1]);
 }
 template<typename _coeff_type,typename T=double>
 inline T coeff_point(const _coeff_type &_coeff_list,const T &x)
@@ -48,7 +36,7 @@ inline vector<array<T,2>> coeff_list(const _coeff_type &_coeff_list, pair<double
 {
     vector<array<T,2>> v;
     for(;_p.first<=_p.second;_p.first+=step)
-    v.push_back({_p.first,coeff_point(_coeff_list,_p.first)});
+    v.push_back({_p.first,coeff_point<decltype(_coeff_list),T>(_coeff_list,_p.first)});
     return v;
 }
 }

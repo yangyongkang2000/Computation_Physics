@@ -34,7 +34,7 @@ vector<T> linear_fit(array_type _array)
         matrix[N-1][N-1]++;
         list[N-1]+=_array[i][N-1];
     }
-    return LinearSolve::LU_LinearSolve(matrix, list);
+    return LinearSolve::LU_LinearSolve<decltype(matrix),decltype(list),T>(matrix, list);
 }
 }
 #endif /* linear_fit_h */
