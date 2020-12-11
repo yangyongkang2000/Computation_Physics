@@ -135,7 +135,7 @@ vector<pair<T,vector_type>> runge_kutta(const function_vector_type &func_vector,
 template<typename function_type,typename vector_type,typename T=double>
 vector<pair<T, vector_type>> desolve(const function_type& func,pair<T,vector_type> _cond,const T& _end,const T &h=1e-2)
 ```
-+ 展示数值计算算法函数结构
+### 展示数值计算算法函数结构
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1900" height="664pt" viewBox="0 0 1425 664">
     <defs>
         <symbol overflow="visible" id="a">
