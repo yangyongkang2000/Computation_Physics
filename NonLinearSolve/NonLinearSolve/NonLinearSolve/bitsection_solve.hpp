@@ -10,13 +10,13 @@
 namespace NonLinearSolve
 {
 using namespace std;
-template<typename  _equation>
-inline double bitsetion_solve(const _equation& equ,pair<double,double>x,double eps=1e-5)
+template<typename  _equation,typename T=double>
+inline T bitsetion_solve(const _equation& equ,pair<T,T>x,T eps=1e-5)
 {
     if(equ(x.first)*equ(x.second)>0||x.second<=x.first)
         return NAN;
     int n=1+round(log2(x.second-x.first)-log2(eps));
-    double y;
+    T y;
     for(int i=0;i<n;i++)
     {
         y=(x.first+x.second)*0.5;

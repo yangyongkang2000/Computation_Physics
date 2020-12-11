@@ -7,12 +7,9 @@ Numeric Function Programming With C++
 
 
 
-### 线性代数
-+ Gauss消元解决线性方程组  
-```C++
- template<unsigned int N,typename T=double>
-   inline  vector<T> gauss_elim(array<valarray<T>,N>&matrix,array<T,N>&list)
-```
+### 线性方程求解
++  ~~高斯塞德尔迭代法解线性方程组~~
+ + ~~Gauss消元解决线性方程组~~  （我取消了多余的函数，只用LU方法解决线性方程组）
 + LU分解解决线性方程方程组
 ```C++
 inline vector<T> LU_LinearSolve(matrix_type &matrix,list_type &list)
@@ -20,50 +17,535 @@ inline vector<T> LU_LinearSolve(matrix_type &matrix,list_type &list)
 template<typename matrix_type,typename list_type,typename T=double>
 inline vector<T> LU_LinearSolve(matrix_type &matrix,list_type &list)
 ```
-+ 高斯塞德尔迭代法解线性方程组
-```C++
-template<unsigned int N,typename T=double>
-      vector<T> gauss_seidel(array<array<T,N>,N>&matrix,array<T,N>&list,T delta=1e-5,int maxl=1000,double w=1.46)
-```
+
 + 三对角线性方程的解法
+>   ~~template<unsigned int N,typename T=double>
+   vector<T> tri_solve(array<array<T,3>,N> &matrix,array<T,N>&list)~~
 ```C++
-template<unsigned int N,typename T=double>
-   vector<T> tri_solve(array<array<T,3>,N> &matrix,array<T,N>&list)
+template<typename matrix_type,typename list_type,typename T=double>
+   vector<T> tri_solve(const matrix_type &matrix,const list_type &list)
 ```
 
 ### 非线性方程
-+ 二分法
-```C++
-template<typename  _equation>
++ 弦截法
+> ~~template<typename  _equation>
 inline double bitsetion_solve(const _equation& equ,pair<double,double>x,double eps=1e-5)
 template<typename _equation>
-inline double secant_solve(const _equation &equ,pair<double,double> x,double eps=1e-5,int nmax=1000)
+inline double secant_solve(const _equation &equ,pair<double,double> x,double eps=1e-5,int nmax=1000)~~ 
+```C++
+template<typename _equation,typename T=double>
+inline T secant_solve(const _equation &equ,pair<T,T> x,T eps=1e-5,int nmax=1000)
+template<typename _equation,typename T=double>
+inline T secant_solve(const _equation &equ,T start,T eps=1e-5,int nmax=1000,T delta=1e-1)
 ```
-+ 弦截法 
-``` C++
-template<typename _equation>
-inline double secant_solve(const _equation &equ,double start,double eps=1e-5,int nmax=1000,double delta=1e-1)
+
++ 二分法
+
+ > ~~template<typename _equation>
+inline double secant_solve(const _equation &equ,double start,double eps=1e-5,int nmax=1000,double delta=1e-1)~~
+```C++
+template<typename  _equation,typename T=double>
+inline T bitsetion_solve(const _equation& equ,pair<T,T>x,T eps=1e-5)
 ```
 + 牛顿法
+>
+~~template<unsigned int N,typename zeros_type,typename equation_type>
+zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,double w=1e-9,double eps=1e-7,int nmax=1000)~~
 ```C++
-template<unsigned int N,typename zeros_type,typename equation_type>
-zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,double w=1e-9,double eps=1e-7,int nmax=1000)
+template<typename zeros_type,typename equation_type,typename T=double>
+zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,T w=1e-9,T eps=1e-7,int nmax=1000)
 ```
 ### 函数拟合
-+ 拉格朗日拟合 
++ 拉格朗日插值
+> 
+~~template<const unsigned int N,typename point_type,typename T=double>
+inline vector<T> lagrange_fit(const point_type & list)~~
 ```C++
-template<const unsigned int N,typename point_type,typename T=double>
-inline vector<T> lagrange_fit(const point_type & list)
+template<typename point_type,typename T=double>
+inline vector<T> lagrange_fit(point_type &list)
 ```
 + 线性拟合
 ```C++
 template<typename array_type,typename T=double>
 vector<T> linear_fit(array_type _array)
 ```
++ 三次样条插值
+```C++
+template<typename point_type,typename T=double>
+inline auto cubic_spline_fit(const point_type &list) ->Interpolation<decltype(list[0]),T>
+```
 
 ### 微分与积分
 + 中间差商法求微分
+```C++
+class  Diff {
+public:
+    template<unsigned int N,typename function_type>
+    T function_diff(const function_type& func,const T &x);
+    template<unsigned int N,typename function_type>
+    vector<T> function_diff(const function_type& func,const  vector<T>&x_list);
+}
+```
 + 理查森外推法求微分
+```C++
+class  Diff {
+public:
+ template<unsigned int N,typename function_type>
+    T richason_diff(const function_type&func,const T &x);
+    template<unsigned int N,typename function_type>
+    vector<T> richason_diff(const function_type&func,const vector<T>&x_list);
+}
+```
 + 辛普森法求积分
+```C++
+template<typename function_type,typename T=double>
+inline T simpson_integrate(const function_type &func,const pair<T, T>& _p,int n=100);
+template<typename  function_type,typename T=double>
+inline vector<T> simpson_integrate(const vector<function_type> &func_vector,const pair<T, T>& _p,int n=100)
+```
 + 罗贝格法求积分
+```C++
+template<typename function_type,typename T=double>
+inline T romberg_integrate(const function_type &func,const pair<T,T>&_p,T eps=0.00001,int _max=20);
+template<typename function_type,typename T=double>
+vector<T> romberg_integrate(const vector<function_type> &func_vector,const pair<T,T>&_p,T eps=0.00001,int _max=20)
+```
 + 高斯法求积分
+```C++
+template<typename function_type,typename T=double>
+inline T gauss_integrate(const function_type &func,const pair<T,T>&_p,T eps=1e-5);
+template<typename function_type,typename T=double>
+inline vector<T> gauss_integrate(const vector<function_type> &func_vector, const pair<T, T>_p,T _eps=1e-5)
+```
++ 无穷积分
+```C++
+template<typename function_type,typename T=double>
+inline T infinity_integrate(const function_type &func,char _mode='2',T _p=0.0,T eps=1e-5)
+```
+### 常微分方程求解
++ 龙格库塔法解一阶常微分方程
+```C++
+template<typename function_type,typename T=double>
+vector<pair<T,T>> runge_kutta(const function_type&func,const pair<T,T> &_cond,const T &_end, T h=1e-2)
+```
++ 龙格库塔法解高阶微分方程和一阶微分方程组
+```C++
+template<typename function_vector_type,typename vector_type,typename T=double>
+vector<pair<T,vector_type>> runge_kutta(const function_vector_type &func_vector, pair<T,vector_type>_cond,const T& _end,const T &h=1e-2);
+template<typename function_type,typename vector_type,typename T=double>
+vector<pair<T, vector_type>> desolve(const function_type& func,pair<T,vector_type> _cond,const T& _end,const T &h=1e-2)
+```
++ 展示数值计算算法函数结构
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1900" height="664pt" viewBox="0 0 1425 664">
+    <defs>
+        <symbol overflow="visible" id="a">
+            <path d="M2.102 0L.125-5.188h.93l1.113 3.11c.121.336.23.68.332 1.043.078-.274.188-.602.328-.988L3.98-5.187h.903L2.922 0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="b">
+            <path d="M4.21-1.672l.907.113c-.144.532-.41.942-.797 1.239-.386.293-.883.437-1.484.437-.758 0-1.36-.234-1.805-.699C.586-1.051.367-1.707.367-2.547c0-.875.223-1.55.672-2.031.45-.484 1.031-.727 1.75-.727.691 0 1.258.239 1.7.711.437.473.66 1.137.66 1.992 0 .051-.004.13-.008.235H1.273c.032.57.196 1.004.485 1.308.289.301.652.454 1.086.454.32 0 .594-.086.824-.254.227-.168.406-.438.543-.813zM1.325-3.09H4.22c-.04-.437-.149-.765-.332-.98a1.348 1.348 0 00-1.09-.508 1.39 1.39 0 00-1.016.402c-.277.27-.43.633-.457 1.086zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="c">
+            <path d="M4.043-1.898l.863.109c-.093.598-.336 1.062-.722 1.402-.391.336-.868.504-1.434.504-.71 0-1.281-.23-1.71-.695C.604-1.043.39-1.707.39-2.574c0-.559.094-1.051.278-1.469.187-.418.469-.734.848-.945.379-.211.793-.317 1.238-.317.562 0 1.023.145 1.383.43.355.285.586.688.687 1.21l-.855.134c-.082-.348-.223-.61-.43-.785a1.119 1.119 0 00-.75-.262c-.445 0-.805.156-1.078.473-.277.316-.418.82-.418 1.507 0 .696.133 1.203.402 1.52.266.316.614.473 1.043.473.348 0 .633-.106.864-.317.234-.21.378-.539.441-.976zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="d">
+            <path d="M2.578-.785l.125.777C2.457.043 2.234.07 2.04.07c-.316 0-.562-.05-.742-.152A.838.838 0 01.93-.48C.855-.645.82-.992.82-1.52V-4.5H.176v-.688H.82v-1.28l.875-.528v1.809h.883v.687h-.883v3.031c0 .25.016.41.047.485.031.07.078.125.149.168.07.043.171.066.3.066.098 0 .227-.012.387-.035zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="e">
+            <path d="M.332-2.594c0-.96.266-1.672.8-2.133.446-.382.99-.578 1.634-.578.71 0 1.293.235 1.746.703.453.47.68 1.114.68 1.938 0 .664-.102 1.191-.301 1.574-.2.383-.493.68-.875.89-.383.212-.801.317-1.25.317-.727 0-1.317-.234-1.762-.699-.45-.465-.672-1.137-.672-2.012zm.902 0c0 .664.145 1.164.438 1.492.289.332.652.497 1.094.497.433 0 .796-.168 1.086-.497.289-.332.437-.84.437-1.52 0-.64-.148-1.128-.437-1.456a1.391 1.391 0 00-1.086-.496c-.442 0-.805.164-1.094.492-.29.328-.438.824-.438 1.488zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="f">
+            <path d="M.648 0v-5.188h.793v.79c.2-.368.387-.61.559-.727a.982.982 0 01.563-.18c.296 0 .597.098.906.285l-.305.817a1.24 1.24 0 00-.644-.192.864.864 0 00-.52.172.936.936 0 00-.324.48 3.436 3.436 0 00-.149 1.028V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="g">
+            <path d="M.734 0v-7.156h.946v6.312h3.523V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="h">
+            <path d="M5.469-7.156h.945v4.133c0 .718-.078 1.293-.242 1.714-.164.422-.457.766-.883 1.032-.422.265-.98.398-1.672.398-.672 0-1.219-.113-1.644-.348a1.981 1.981 0 01-.914-1C.875-1.664.785-2.266.785-3.023v-4.133h.95v4.129c0 .62.058 1.078.171 1.375.117.293.317.52.598.68.281.16.625.238 1.031.238.695 0 1.192-.157 1.488-.473.297-.316.446-.922.446-1.82zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="j">
+            <path d="M.664-6.148v-1.008h.879v1.008zM.664 0v-5.188h.879V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="k">
+            <path d="M.66 0v-5.188h.79v.739c.382-.57.933-.856 1.652-.856.312 0 .597.059.859.172.262.11.46.258.59.442.129.183.222.398.273.648.031.164.051.45.051.856V0h-.883v-3.156c0-.356-.031-.625-.101-.801a.834.834 0 00-.364-.426 1.165 1.165 0 00-.613-.156 1.42 1.42 0 00-.969.355c-.273.239-.406.688-.406 1.352V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="l">
+            <path d="M4.043-.64c-.324.277-.64.472-.941.585-.301.114-.622.172-.97.172-.57 0-1.007-.14-1.312-.418a1.38 1.38 0 01-.46-1.066c0-.254.058-.485.175-.696.113-.21.266-.378.453-.507a2.12 2.12 0 01.633-.285c.172-.047.434-.09.781-.133.711-.086 1.23-.184 1.567-.301.004-.121.008-.2.008-.23 0-.36-.086-.614-.25-.758-.227-.2-.559-.297-1-.297-.414 0-.72.07-.918.215-.196.144-.344.402-.438.77l-.86-.118c.079-.367.208-.664.387-.89.18-.227.438-.4.778-.524.34-.121.73-.184 1.176-.184.441 0 .8.055 1.078.157.277.105.48.238.61.394.132.16.222.36.272.598.032.148.047.422.047.812v1.172c0 .817.02 1.332.055 1.55.04.216.113.423.223.622h-.918a1.925 1.925 0 01-.176-.64zm-.074-1.962c-.32.13-.797.239-1.434.332-.363.051-.617.11-.77.176a.751.751 0 00-.343.285.75.75 0 00-.125.418c0 .235.09.43.27.586.175.157.433.235.777.235.34 0 .64-.075.902-.223.266-.148.457-.352.582-.61.094-.199.14-.492.14-.878zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="m">
+            <path d="M.45-2.3l.894-.079c.043.36.14.652.293.883.156.23.394.414.722.555.325.144.692.214 1.098.214.363 0 .68-.054.957-.164.277-.105.484-.254.617-.441.137-.188.203-.39.203-.613a.937.937 0 00-.195-.586c-.129-.168-.344-.309-.644-.422-.192-.074-.618-.192-1.274-.352C2.461-3.46 2-3.609 1.738-3.75c-.34-.18-.597-.402-.765-.668a1.63 1.63 0 01-.25-.89c0-.36.101-.7.308-1.012.203-.313.504-.555.899-.715a3.387 3.387 0 011.312-.246c.531 0 1 .086 1.403.258.406.171.718.421.937.753.219.332.336.707.352 1.13l-.91.066c-.047-.453-.215-.793-.497-1.024-.28-.23-.695-.347-1.246-.347-.574 0-.992.105-1.254.316-.261.207-.39.461-.39.758 0 .258.09.469.277.637.184.164.66.336 1.43.507.77.176 1.297.329 1.582.457.418.192.726.434.926.73.195.294.296.634.296 1.017 0 .382-.109.742-.328 1.078a2.16 2.16 0 01-.941.785A3.258 3.258 0 013.5.12c-.648 0-1.191-.094-1.629-.281a2.277 2.277 0 01-1.027-.852A2.4 2.4 0 01.449-2.3zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="n">
+            <path d="M.64 0v-7.156h.88V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="o">
+            <path d="M.309-1.547l.867-.137c.05.348.187.614.41.801.223.184.531.278.934.278.402 0 .703-.083.898-.247.195-.164.293-.359.293-.578 0-.199-.086-.355-.258-.468-.121-.079-.422-.18-.898-.297-.645-.164-1.094-.305-1.34-.426A1.277 1.277 0 01.453-3.81a1.384 1.384 0 01.594-1.133c.137-.101.32-.187.558-.257.235-.07.489-.106.758-.106.407 0 .766.063 1.07.18.31.117.536.273.684.473.145.199.246.468.301.804l-.86.118a.94.94 0 00-.34-.625c-.187-.149-.448-.223-.792-.223-.403 0-.692.066-.864.2-.171.132-.257.288-.257.468a.5.5 0 00.105.308.793.793 0 00.34.235c.086.031.344.105.773.222.622.168 1.055.301 1.301.407.246.105.442.261.582.465.14.199.207.449.207.75 0 .293-.086.57-.254.828a1.686 1.686 0 01-.742.601c-.32.14-.687.211-1.094.211-.671 0-1.187-.14-1.539-.422C.633-.582.406-.996.31-1.547zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="p">
+            <path d="M1.617 0L.031-5.188h.906l.825 2.997.308 1.113c.012-.055.102-.414.27-1.07l.824-3.04h.902l.778 3.008.258.993 1.187-4h.856L5.523 0H4.61l-.824-3.105-.2-.883L2.536 0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="q">
+            <path d="M4.059 0v-.762c-.403.586-.954.88-1.645.88a2.1 2.1 0 01-.86-.177C1.29-.176 1.095-.324.965-.5a1.643 1.643 0 01-.269-.652c-.039-.172-.054-.446-.054-.82v-3.216h.879v2.88c0 .456.015.765.05.925a.94.94 0 00.352.547c.18.133.402.195.664.195.266 0 .512-.066.742-.203.235-.133.399-.316.492-.55.098-.231.145-.57.145-1.012v-2.781h.879V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="r">
+            <path d="M4.023 0v-.656c-.328.515-.812.773-1.449.773-.414 0-.793-.113-1.14-.344a2.198 2.198 0 01-.805-.953C.437-1.586.344-2.059.344-2.586c0-.52.086-.988.258-1.41.171-.422.43-.746.773-.969a2.08 2.08 0 011.16-.34 1.747 1.747 0 011.43.715v-2.566h.875V0zM1.246-2.586c0 .664.14 1.16.418 1.488.281.328.61.493.992.493.383 0 .711-.157.98-.473.27-.313.403-.793.403-1.438 0-.71-.137-1.23-.41-1.562-.274-.332-.613-.496-1.012-.496-.39 0-.719.16-.98.476-.262.32-.39.825-.39 1.512zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="s">
+            <path d="M.66 1.988v-7.175h.8v.675c.188-.261.403-.46.642-.593.234-.133.523-.2.863-.2.441 0 .832.117 1.172.344.34.227.593.55.765.965.172.414.258.871.258 1.363 0 .531-.094 1.008-.285 1.434a2.15 2.15 0 01-.828.976c-.363.227-.746.34-1.149.34a1.62 1.62 0 01-.785-.187 1.703 1.703 0 01-.574-.47v2.528zm.793-4.55c0 .667.137 1.16.406 1.476.27.32.598.48.985.48.39 0 .722-.164 1-.496.281-.328.418-.843.418-1.535 0-.66-.137-1.156-.407-1.484-.273-.328-.597-.492-.972-.492s-.707.176-.996.523c-.29.352-.434.86-.434 1.527zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="t">
+            <path d="M.5.43l.852.125c.035.265.136.457.296.578.22.164.52.242.895.242.406 0 .723-.078.941-.242.223-.164.375-.39.454-.684C3.98.27 4.003-.105 4-.68c-.383.453-.863.68-1.438.68-.71 0-1.265-.258-1.656-.773C.516-1.285.32-1.903.32-2.621c0-.496.09-.953.27-1.371.18-.418.441-.742.781-.969a2.11 2.11 0 011.2-.344c.609 0 1.113.25 1.511.742v-.625h.809v4.485c0 .808-.082 1.379-.246 1.715-.165.34-.422.605-.782.8-.355.196-.793.293-1.316.293-.617 0-1.117-.14-1.496-.417C.668 1.41.484.988.5.43zm.727-3.118c0 .68.132 1.18.406 1.493.27.312.605.468 1.015.468.403 0 .743-.156 1.016-.468.273-.309.406-.797.406-1.461 0-.633-.14-1.114-.422-1.438-.28-.32-.62-.48-1.015-.48-.39 0-.723.156-.996.476-.274.317-.41.785-.41 1.41zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="u">
+            <path d="M.867 0v-4.5H.094v-.688h.773v-.55c0-.348.031-.606.094-.778a1.12 1.12 0 01.45-.55c.21-.145.51-.215.894-.215.246 0 .52.031.82.09l-.133.765a3.068 3.068 0 00-.515-.05c-.266 0-.457.058-.567.171-.113.114-.168.328-.168.64v.478h1.012v.687H1.742V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="v">
+            <path d="M.66 0v-7.156h.88v2.566c.41-.476.925-.715 1.55-.715.387 0 .719.078 1.004.23.281.153.484.36.605.626.121.27.184.656.184 1.164V0h-.88v-3.285c0-.442-.093-.762-.284-.961-.192-.2-.461-.3-.809-.3-.262 0-.504.07-.734.202-.23.137-.395.32-.492.551-.098.23-.145.55-.145.957V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="w">
+            <path d="M.66 0v-5.188h.785v.731c.164-.254.38-.461.649-.613.27-.157.578-.235.922-.235.386 0 .699.082.945.242.246.16.422.383.523.668.41-.605.942-.91 1.602-.91.512 0 .906.145 1.184.43.277.285.418.723.418 1.316V0h-.875v-3.266c0-.351-.032-.605-.086-.761a.737.737 0 00-.313-.371.963.963 0 00-.523-.141 1.23 1.23 0 00-.91.363c-.243.242-.364.63-.364 1.164V0h-.875v-3.367c0-.39-.074-.688-.219-.883-.14-.195-.375-.29-.703-.29-.246 0-.472.063-.683.196-.211.13-.364.32-.457.57-.094.25-.14.61-.14 1.083V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="y">
+            <path d="M1.469 0H.656v-7.156h.875v2.55c.371-.464.848-.699 1.422-.699.32 0 .621.067.906.196.286.129.52.308.704.543.183.23.328.511.433.84.106.328.156.68.156 1.054 0 .89-.222 1.578-.66 2.063-.437.484-.969.726-1.582.726-.613 0-1.094-.254-1.441-.765zM1.46-2.633c0 .621.082 1.07.254 1.348.277.453.648.68 1.12.68.384 0 .72-.168.997-.5.281-.333.422-.833.422-1.493 0-.675-.137-1.175-.402-1.5-.27-.32-.594-.48-.977-.48s-.715.164-.996.5c-.277.332-.418.816-.418 1.445zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="z">
+            <path d="M.934 0v-7.156h.945V0zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="A">
+            <path d="M.621 1.996l-.098-.824c.192.05.36.078.5.078.196 0 .352-.031.47-.098A.807.807 0 001.78.88c.055-.09.145-.305.27-.652.015-.051.043-.122.078-.22L.16-5.186h.95l1.077 3.003c.141.383.266.782.376 1.204.101-.403.222-.797.363-1.184L4.03-5.187h.883L2.938.085c-.211.57-.376.965-.493 1.18-.156.289-.336.5-.535.636a1.265 1.265 0 01-.722.203c-.172 0-.36-.035-.567-.109zm0 0"/>
+        </symbol>
+        <symbol overflow="visible" id="i">
+            <path d="M5.117 1.25H0v-.5h5.117zm0 0"/>
+        </symbol>
+        <clipPath id="x">
+            <path d="M194 369h8.8v8H194zm0 0"/>
+        </clipPath>
+    </defs>
+    <path d="M503.719 157.16L290.492 263.773" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M292.895 266.102l-.317-.243-.73-.597-.414-.375-.391-.387-.328-.379-.223-.348-.129-.351-.101-.485-.086-.562-.063-.586-.078-1.012-.02-.437-9.265 8.305zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M518.39 157.16l213.227 106.613" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M732.04 260.453l-.005.399-.039.945-.05.555-.075.546-.11.489-.144.386-.203.313-.324.375-.403.402-.43.403-.76.668-.34.28 12.202 2.43zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M503.098 155.48L485.012 160l-29.977 7.496-33.914 8.477-91.437 22.859-51.618 12.906-61.46 15.364-65.395 16.351-69.328 17.332-9.297 3.3-8.54 3.895-7.78 4.489-5.883 5.969L45.262 285l-4.364 7.152-2.468 8.637-1.707 9.23-.95 9.82v52.2" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M38.93 370.93l-.36.175-.86.387-.519.203-.523.176-.484.125-.41.043-.372-.043-.48-.125-.54-.176-.55-.203-.941-.387-.403-.175 3.285 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M511.055 161.691V372.04" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M514.215 370.93l-.36.175-.863.387-.52.203-.519.176-.488.125-.41.043-.371-.043-.48-.125-.54-.176-.55-.203-.942-.387-.402-.175 3.285 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M516.855 159.29l.258.257 3.258 3.262 3.418 3.414 7.297 7.297 4.344 4.347 4.504 4.5 9.468 9.469 4.965 4.969 10.863 10.863 5.899 5.894 6.05 6.055 12.571 12.57 6.52 6.516 3.457 3.848 3.316 3.906 3.184 3.965 3.043 4.02 2.902 4.078 2.765 4.136 2.215 4.364 2.075 4.421 1.937 4.48 1.797 4.536 1.66 4.594 1.52 4.648.968 4.992.828 5.707.692 7.086.555 9.121.414 11.82.277 15.18.277 5.165.414 5.109.555 5.05.692 4.997.828 4.937.968 4.88 1.524 4.652 1.656 4.593 1.8 4.535 1.934 4.477 2.075 4.422 2.215 4.367 2.765 4.133 2.906 4.078 3.04 4.02 3.183 3.964 3.32 3.907 3.457 3.847 6.516 6.52 35.383 35.383 4.969 4.964 4.808 4.813 4.656 4.656 4.504 4.5 4.344 4.348 3.727 3.726 2.804 2.801" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M736.645 493.434l-.13.378-.34.883-.218.512-.246.492-.258.43-.258.32-.293.235-.425.25-.508.257-.535.247-.938.394-.406.156 10.805 6.164zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M505.254 159.29l-.254.257-3.262 3.262-3.418 3.414-7.297 7.297-4.343 4.347-4.504 4.5-4.656 4.656-4.81 4.813-15.831 15.832-5.899 5.894-6.05 6.055-19.086 19.086-3.461 3.848-3.317 3.906-3.183 3.965-3.043 4.02-2.902 4.078-2.766 4.136-2.215 4.364-2.074 4.421-1.934 4.48-1.8 4.536-1.66 4.594-1.52 4.648-.969 4.992-.828 5.707-.692 7.086-.554 9.121-.414 11.82-.278 15.18v118.82l.371 5.012.56 4.88.741 4.745.926 4.614 1.113 4.476 1.301 4.348 2.04 3.809 2.226 3.675 2.414 3.543 2.597 3.407 2.782 3.277 2.968 3.14 3.711 2.606 3.899 2.473 4.082 2.34 4.265 2.203 4.454 2.07 4.64 1.937 25.285 8.43 24.594 8.2 47.098 15.699 22.508 7.5 21.812 7.273 19.035 6.344L616 584.539l17.645 5.883 16.949 5.652 16.258 5.418 15.562 5.188 12.781 4.261 12.09 4.028 11.395 3.797 10.699 3.57 1.203.398" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M730.527 619.387l.055.398.094.938.031.558v.551l-.035.5-.09.402-.156.34-.27.414-.34.457-.367.457-.664.774-.293.324 12.422.68zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M503.273 156.086l-11.535 3.844-22.093 7.363-24.872 8.293-31.82 10.605-34.598 11.532-37.375 12.46-91.418 30.473-49.878 16.625-9.094 4.008-8.348 4.543-7.61 5.082-5.75 6.414-5.01 6.95-4.267 7.488-2.414 8.824-1.668 9.355-.93 9.895v52.2" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M157.75 370.93l-.355.175-.864.387-.52.203-.523.176-.484.125-.41.043-.371-.043-.48-.125-.54-.176-.55-.203-.942-.387-.402-.175 3.285 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M518.836 156.086l11.535 3.844 22.094 7.363 24.87 8.293 31.821 10.605 34.598 11.532 37.375 12.46 44.32 14.774 47.102 15.7 49.875 16.624 9.094 4.008 8.347 4.543 7.61 5.082 5.753 6.414 5.008 6.95 4.27 7.488 2.41 8.824 1.672 9.355.926 9.895v52.2" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M870.676 370.93l-.36.175-.863.387-.52.203-.519.176-.488.125-.41.043-.371-.043-.48-.125-.54-.176-.55-.203-.942-.387-.403-.175 3.286 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M519.012 155.48l4.574 1.145L537.098 160l14.496 3.625 15.48 3.871 16.465 4.117 17.45 4.36 21.382 5.347 22.367 5.59 23.352 5.84 24.336 6.082 25.316 6.332 26.305 6.574 30.238 7.559 31.219 7.805 32.207 8.054 102.516 25.63 4.746 1.573 4.55 1.727 4.368 1.875 4.172 2.02 3.988 2.171 3.793 2.317 3.035 2.91 2.848 3.058 2.656 3.208 2.465 3.355 2.277 3.504 2.09 3.648 1.328 4.356 1.137 5.164.949 6.629.758 8.758.57 11.546.379 15V609.68" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M989.496 608.57l-.36.176-.863.387-.52.203-.519.176-.488.125-.41.043-.371-.043-.48-.125-.54-.176-.55-.203-.942-.387-.402-.176 3.285 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M266.078 275.98L52.852 382.594" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M55.254 384.922l-.316-.242-.731-.598-.414-.375-.39-.387-.329-.379-.222-.347-.13-.352-.1-.484-.087-.563-.062-.586-.078-1.011-.02-.438-9.266 8.305zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M280.75 275.98l213.227 106.614" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M494.398 379.273l-.003.399-.04.945-.05.555-.075.547-.109.488-.144.387-.204.312-.324.375-.402.403-.43.402-.762.668-.34.281 12.204 2.43zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M267.613 278.11l-99.52 99.519" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M171.113 379.078l-.379-.129-.882-.336-.512-.222-.492-.243-.434-.257-.32-.262-.23-.293-.255-.426-.254-.504-.246-.535-.394-.937-.16-.41-6.16 10.808zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M754.496 278.11l99.52 99.519" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M855.465 374.613l-.13.38-.339.882-.219.508-.246.496-.258.43-.257.32-.293.234-.426.25-.508.258-.535.246-.938.395-.406.156 10.805 6.164zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1097.113 36.277l-567.336 113.47" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M531.484 152.625l-.242-.316-.547-.77-.304-.469-.274-.476-.215-.453-.125-.395-.03-.371.026-.496.067-.563.094-.582.191-1 .094-.425-11.121 5.574zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1112.492 38.34l5.285 2.64 6.93 3.465 7.34 3.668 7.75 3.88 8.164 4.081 9.812 4.903 10.223 5.113 45.008 22.504 13.52 6.758 13.93 6.964 14.339 7.172 14.754 7.375 15.164 7.586 15.578 7.785 4.371 2.578 4.2 2.688 4.023 2.793 3.847 2.902 3.676 3.012 3.5 3.117 2.797 3.551 2.625 3.66 2.45 3.766 2.273 3.879 2.097 3.98 1.926 4.094 1.227 4.633 1.047 5.402.875 6.832.699 8.918.527 11.668.348 15.078V490.86" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1345.957 489.75l-.36.176-.863.387-.515.203-.524.175-.488.125-.41.043-.371-.043-.48-.125-.54-.175-.55-.204-.942-.386-.398-.176 3.28 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1110.957 40.469l14.23 14.23 28.403 28.406 36.781 36.778 18.668 23.953 11.203 27.043 3.735 30.14v52.2" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1227.137 252.11l-.36.175-.863.387-.52.203-.519.176-.488.125-.41.043-.372-.043-.48-.125-.54-.176-.55-.203-.941-.387-.399-.176 3.282 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1105.156 42.871V253.22" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1108.316 252.11l-.359.175-.863.387-.52.203-.52.176-.488.125-.41.043-.37-.043-.481-.125-.54-.176-.55-.203-.942-.387-.402-.176 3.285 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1334.754 511.563L767.418 625.026" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M769.125 627.906l-.242-.316-.547-.77-.3-.468-.278-.477-.215-.453-.125-.395-.031-.37.027-.497.066-.562.094-.582.192-1 .097-.426-11.125 5.574zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1337 515.75l-99.52 99.52" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1240.496 616.719l-.379-.13-.883-.335-.507-.223-.497-.242-.43-.258-.32-.261-.234-.29-.25-.43-.258-.503-.246-.535-.394-.938-.157-.41-6.164 10.809zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1342.797 518.152v91.528" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1345.957 608.57l-.36.176-.863.387-.515.203-.524.176-.488.125-.41.043-.371-.043-.48-.125-.54-.176-.55-.203-.942-.387-.398-.176 3.28 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M518.39 394.8l213.227 106.614" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M732.04 498.094l-.005.398-.039.945-.05.555-.075.547-.11.488-.144.387-.203.313-.324.375-.403.402-.43.402-.76.668-.34.281 12.202 2.43zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M748.695 518.152v91.528" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M751.855 608.57l-.359.176-.863.387-.52.203-.52.176-.488.125-.41.043-.37-.043-.481-.125-.54-.176-.55-.203-.942-.387-.402-.176 3.285 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M756.031 513.621l213.227 106.613" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M969.68 616.914l-.004.399-.04.945-.05.554-.074.547-.11.489-.144.386-.203.313-.325.375-.402.402-.426.403-.765.668-.336.28 12.199 2.43zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1218.18 278.11l-99.52 99.519" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1121.676 379.078l-.38-.129-.882-.336-.512-.222-.492-.243-.43-.257-.32-.262-.234-.293-.25-.426-.258-.504-.246-.535-.395-.937-.156-.41-6.164 10.808zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1223.977 280.512v210.347" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1227.137 489.75l-.36.176-.863.387-.52.203-.519.175-.488.125-.41.043-.372-.043-.48-.125-.54-.175-.55-.204-.941-.386-.399-.176 3.282 12zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1097.375 393.727L766.809 503.914" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M768.86 506.559l-.282-.286-.637-.695-.359-.426-.332-.441-.27-.422-.171-.375-.075-.367-.035-.492-.004-.57.02-.587.066-1.015.043-.434-10.347 6.91zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M867.516 399.332v63.094l3.734 30.137 11.203 27.046 18.672 23.95 36.777 36.78 28.407 28.403 6.527 6.528" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M974.285 612.254l-.129.379-.34.883-.218.511-.246.493-.258.433-.258.317-.293.234-.426.25-.508.258-.535.246-.937.394-.407.157 10.805 6.164zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1216.64 513.621l-213.226 106.613" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M1005.816 622.563l-.316-.243-.73-.597-.415-.375-.39-.387-.328-.379-.223-.348-.125-.351-.105-.485-.086-.562-.063-.586-.078-1.012-.02-.437-9.265 8.304zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M1097.82 275.98L884.594 382.594" fill="none" stroke="#264a80" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <path d="M886.996 384.922l-.316-.242-.73-.598-.415-.375-.39-.387-.329-.379-.222-.347-.13-.352-.1-.484-.087-.563-.062-.586-.078-1.011-.02-.438-9.265 8.305zm0 0" fill="#264a80" fill-opacity=".7"/>
+    <path d="M519.258 153.492a8.202 8.202 0 00-14.004-5.8 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.402-5.798zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#a" x="521.257" y="139.289"/>
+    <use xlink:href="#b" x="526.257" y="139.289"/>
+    <use xlink:href="#c" x="531.819" y="139.289"/>
+    <use xlink:href="#d" x="536.819" y="139.289"/>
+    <use xlink:href="#e" x="539.597" y="139.289"/>
+    <use xlink:href="#f" x="545.158" y="139.289"/>
+    <path d="M281.617 272.313a8.202 8.202 0 00-14.004-5.801 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.402-5.798zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#g" x="283.616" y="258.109"/>
+    <use xlink:href="#h" x="289.178" y="258.109"/>
+    <use xlink:href="#i" x="296.399" y="258.109"/>
+    <use xlink:href="#g" x="301.517" y="258.109"/>
+    <use xlink:href="#j" x="307.078" y="258.109"/>
+    <use xlink:href="#k" x="309.3" y="258.109"/>
+    <use xlink:href="#b" x="314.861" y="258.109"/>
+    <use xlink:href="#l" x="320.423" y="258.109"/>
+    <use xlink:href="#f" x="325.984" y="258.109"/>
+    <use xlink:href="#m" x="329.314" y="258.109"/>
+    <use xlink:href="#e" x="335.984" y="258.109"/>
+    <use xlink:href="#n" x="341.546" y="258.109"/>
+    <use xlink:href="#a" x="343.768" y="258.109"/>
+    <use xlink:href="#b" x="348.768" y="258.109"/>
+    <path d="M756.898 272.313a8.202 8.202 0 00-14.003-5.801 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.401-5.798zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#d" x="758.898" y="258.109"/>
+    <use xlink:href="#f" x="761.676" y="258.109"/>
+    <use xlink:href="#j" x="765.006" y="258.109"/>
+    <use xlink:href="#i" x="767.228" y="258.109"/>
+    <use xlink:href="#o" x="772.345" y="258.109"/>
+    <use xlink:href="#e" x="777.345" y="258.109"/>
+    <use xlink:href="#n" x="782.907" y="258.109"/>
+    <use xlink:href="#a" x="785.128" y="258.109"/>
+    <use xlink:href="#b" x="790.128" y="258.109"/>
+    <path d="M43.977 391.133a8.202 8.202 0 00-14.004-5.8 8.202 8.202 0 1014.004 5.8zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#k" x="45.975" y="376.93"/>
+    <use xlink:href="#b" x="51.537" y="376.93"/>
+    <use xlink:href="#p" x="57.098" y="376.93"/>
+    <use xlink:href="#d" x="64.32" y="376.93"/>
+    <use xlink:href="#e" x="67.098" y="376.93"/>
+    <use xlink:href="#k" x="72.66" y="376.93"/>
+    <use xlink:href="#i" x="78.221" y="376.93"/>
+    <use xlink:href="#o" x="83.339" y="376.93"/>
+    <use xlink:href="#e" x="88.339" y="376.93"/>
+    <use xlink:href="#n" x="93.9" y="376.93"/>
+    <use xlink:href="#a" x="96.122" y="376.93"/>
+    <use xlink:href="#b" x="101.122" y="376.93"/>
+    <path d="M1113.36 34.672a8.202 8.202 0 10-16.404-.003 8.202 8.202 0 0016.403.003zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#j" x="1115.359" y="20.469"/>
+    <use xlink:href="#k" x="1117.581" y="20.469"/>
+    <use xlink:href="#c" x="1123.142" y="20.469"/>
+    <use xlink:href="#n" x="1128.142" y="20.469"/>
+    <use xlink:href="#q" x="1130.364" y="20.469"/>
+    <use xlink:href="#r" x="1135.926" y="20.469"/>
+    <use xlink:href="#b" x="1141.487" y="20.469"/>
+    <path d="M1351 509.953a8.202 8.202 0 10-16.403-.002 8.202 8.202 0 0016.403.002zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#s" x="1353" y="495.75"/>
+    <use xlink:href="#l" x="1358.562" y="495.75"/>
+    <use xlink:href="#j" x="1364.123" y="495.75"/>
+    <use xlink:href="#f" x="1366.345" y="495.75"/>
+    <path d="M519.258 391.133a8.202 8.202 0 00-14.004-5.801 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.402-5.797zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <use xlink:href="#n" x="521.257" y="376.93"/>
+    <use xlink:href="#l" x="523.479" y="376.93"/>
+    <use xlink:href="#t" x="529.04" y="376.93"/>
+    <use xlink:href="#f" x="534.602" y="376.93"/>
+    <use xlink:href="#l" x="537.932" y="376.93"/>
+    <use xlink:href="#k" x="543.493" y="376.93"/>
+    <use xlink:href="#t" x="549.055" y="376.93"/>
+    <use xlink:href="#b" x="554.616" y="376.93"/>
+    <g>
+        <use xlink:href="#i" x="560.178" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#u" x="565.295" y="376.93"/>
+        <use xlink:href="#j" x="568.073" y="376.93"/>
+        <use xlink:href="#d" x="570.295" y="376.93"/>
+    </g>
+    <path d="M756.898 509.953a8.202 8.202 0 00-14.003-5.8 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.401-5.798zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#c" x="758.898" y="495.75"/>
+        <use xlink:href="#e" x="763.898" y="495.75"/>
+        <use xlink:href="#b" x="769.459" y="495.75"/>
+        <use xlink:href="#u" x="775.021" y="495.75"/>
+        <use xlink:href="#u" x="777.799" y="495.75"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="780.578" y="495.75"/>
+    </g>
+    <g>
+        <use xlink:href="#s" x="785.695" y="495.75"/>
+        <use xlink:href="#e" x="791.256" y="495.75"/>
+        <use xlink:href="#j" x="796.818" y="495.75"/>
+        <use xlink:href="#k" x="799.04" y="495.75"/>
+        <use xlink:href="#d" x="804.601" y="495.75"/>
+    </g>
+    <path d="M756.898 628.773a8.202 8.202 0 00-14.003-5.8 8.218 8.218 0 00-2.403 5.8c0 2.176.867 4.262 2.403 5.801a8.218 8.218 0 005.8 2.403 8.202 8.202 0 008.203-8.203zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#c" x="758.898" y="614.571"/>
+        <use xlink:href="#e" x="763.898" y="614.571"/>
+        <use xlink:href="#b" x="769.459" y="614.571"/>
+        <use xlink:href="#u" x="775.021" y="614.571"/>
+        <use xlink:href="#u" x="777.799" y="614.571"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="780.578" y="614.571"/>
+    </g>
+    <g>
+        <use xlink:href="#n" x="785.695" y="614.571"/>
+        <use xlink:href="#j" x="787.916" y="614.571"/>
+        <use xlink:href="#o" x="790.138" y="614.571"/>
+        <use xlink:href="#d" x="795.138" y="614.571"/>
+    </g>
+    <path d="M1232.18 272.313a8.202 8.202 0 10-16.403-.003 8.202 8.202 0 0016.403.002zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#l" x="1234.18" y="258.109"/>
+        <use xlink:href="#n" x="1239.741" y="258.109"/>
+        <use xlink:href="#t" x="1241.963" y="258.109"/>
+        <use xlink:href="#e" x="1247.524" y="258.109"/>
+        <use xlink:href="#f" x="1253.086" y="258.109"/>
+        <use xlink:href="#j" x="1256.416" y="258.109"/>
+        <use xlink:href="#d" x="1258.638" y="258.109"/>
+        <use xlink:href="#v" x="1261.416" y="258.109"/>
+        <use xlink:href="#w" x="1266.977" y="258.109"/>
+    </g>
+    <path d="M1113.36 391.133a8.202 8.202 0 10-16.404-.003 8.202 8.202 0 0016.403.003zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#j" x="1115.359" y="376.93"/>
+        <use xlink:href="#k" x="1117.581" y="376.93"/>
+        <use xlink:href="#k" x="1123.142" y="376.93"/>
+        <use xlink:href="#b" x="1128.704" y="376.93"/>
+        <use xlink:href="#f" x="1134.265" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="1137.595" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#s" x="1142.713" y="376.93"/>
+        <use xlink:href="#f" x="1148.274" y="376.93"/>
+        <use xlink:href="#e" x="1151.604" y="376.93"/>
+        <use xlink:href="#r" x="1157.166" y="376.93"/>
+        <use xlink:href="#q" x="1162.727" y="376.93"/>
+        <use xlink:href="#c" x="1168.289" y="376.93"/>
+        <use xlink:href="#d" x="1173.289" y="376.93"/>
+    </g>
+    <path d="M162.797 391.133a8.202 8.202 0 00-14.004-5.801 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.402-5.797zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#n" x="164.796" y="376.93"/>
+        <use xlink:href="#j" x="167.017" y="376.93"/>
+        <use xlink:href="#k" x="169.239" y="376.93"/>
+        <use xlink:href="#b" x="174.801" y="376.93"/>
+        <use xlink:href="#l" x="180.362" y="376.93"/>
+        <use xlink:href="#f" x="185.924" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="189.254" y="376.93"/>
+    </g>
+    <g clip-path="url(#x)">
+        <use xlink:href="#u" x="194.371" y="376.93"/>
+        <use xlink:href="#j" x="197.149" y="376.93"/>
+        <use xlink:href="#d" x="199.371" y="376.93"/>
+    </g>
+    <path d="M875.719 391.133a8.202 8.202 0 00-14.004-5.801 8.202 8.202 0 1011.602 11.598 8.186 8.186 0 002.402-5.797zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#c" x="877.718" y="376.93"/>
+        <use xlink:href="#q" x="882.718" y="376.93"/>
+        <use xlink:href="#y" x="888.28" y="376.93"/>
+        <use xlink:href="#j" x="893.841" y="376.93"/>
+        <use xlink:href="#c" x="896.063" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="901.063" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#o" x="906.18" y="376.93"/>
+        <use xlink:href="#s" x="911.18" y="376.93"/>
+        <use xlink:href="#n" x="916.742" y="376.93"/>
+        <use xlink:href="#j" x="918.963" y="376.93"/>
+        <use xlink:href="#k" x="921.185" y="376.93"/>
+        <use xlink:href="#b" x="926.747" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="932.718" y="376.93"/>
+    </g>
+    <g>
+        <use xlink:href="#u" x="937.836" y="376.93"/>
+        <use xlink:href="#j" x="940.614" y="376.93"/>
+        <use xlink:href="#d" x="942.836" y="376.93"/>
+    </g>
+    <path d="M994.54 628.773a8.202 8.202 0 10-16.403 0c0 2.176.863 4.262 2.398 5.801a8.218 8.218 0 005.8 2.403 8.202 8.202 0 008.203-8.203zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#z" x="996.539" y="614.571"/>
+        <use xlink:href="#k" x="999.317" y="614.571"/>
+        <use xlink:href="#d" x="1004.879" y="614.571"/>
+        <use xlink:href="#b" x="1007.657" y="614.571"/>
+        <use xlink:href="#f" x="1013.218" y="614.571"/>
+        <use xlink:href="#s" x="1016.549" y="614.571"/>
+        <use xlink:href="#e" x="1022.11" y="614.571"/>
+        <use xlink:href="#n" x="1027.672" y="614.571"/>
+        <use xlink:href="#l" x="1029.893" y="614.571"/>
+        <use xlink:href="#d" x="1035.455" y="614.571"/>
+        <use xlink:href="#j" x="1038.233" y="614.571"/>
+        <use xlink:href="#e" x="1040.455" y="614.571"/>
+        <use xlink:href="#k" x="1046.016" y="614.571"/>
+    </g>
+    <path d="M1232.18 509.953a8.202 8.202 0 10-16.403-.002 8.202 8.202 0 0016.403.002zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#n" x="1234.18" y="495.75"/>
+        <use xlink:href="#e" x="1236.401" y="495.75"/>
+        <use xlink:href="#p" x="1241.963" y="495.75"/>
+        <use xlink:href="#b" x="1249.184" y="495.75"/>
+        <use xlink:href="#f" x="1254.746" y="495.75"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="1258.076" y="495.75"/>
+    </g>
+    <g>
+        <use xlink:href="#y" x="1263.193" y="495.75"/>
+        <use xlink:href="#e" x="1268.755" y="495.75"/>
+        <use xlink:href="#q" x="1274.316" y="495.75"/>
+        <use xlink:href="#k" x="1279.878" y="495.75"/>
+        <use xlink:href="#r" x="1285.439" y="495.75"/>
+    </g>
+    <path d="M1113.36 272.313a8.202 8.202 0 10-16.404-.003 8.202 8.202 0 0016.403.002zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#l" x="1115.359" y="258.109"/>
+        <use xlink:href="#f" x="1120.921" y="258.109"/>
+        <use xlink:href="#f" x="1124.251" y="258.109"/>
+        <use xlink:href="#l" x="1127.581" y="258.109"/>
+        <use xlink:href="#A" x="1133.142" y="258.109"/>
+    </g>
+    <path d="M1232.18 628.773a8.202 8.202 0 10-14 5.801 8.202 8.202 0 0014-5.8zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#o" x="1234.18" y="614.571"/>
+        <use xlink:href="#b" x="1239.18" y="614.571"/>
+        <use xlink:href="#c" x="1244.741" y="614.571"/>
+        <use xlink:href="#l" x="1249.741" y="614.571"/>
+        <use xlink:href="#k" x="1255.303" y="614.571"/>
+        <use xlink:href="#d" x="1260.864" y="614.571"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="1263.642" y="614.571"/>
+    </g>
+    <g>
+        <use xlink:href="#o" x="1268.76" y="614.571"/>
+        <use xlink:href="#e" x="1273.76" y="614.571"/>
+        <use xlink:href="#n" x="1279.321" y="614.571"/>
+        <use xlink:href="#a" x="1281.543" y="614.571"/>
+        <use xlink:href="#b" x="1286.543" y="614.571"/>
+    </g>
+    <path d="M1351 628.773a8.202 8.202 0 10-14 5.801 8.202 8.202 0 0014-5.8zm0 0" fill-rule="evenodd" fill="#a3b4cc" stroke-linecap="square" stroke="#000" stroke-opacity=".7" stroke-miterlimit="3.25"/>
+    <g>
+        <use xlink:href="#y" x="1353" y="614.571"/>
+        <use xlink:href="#j" x="1358.562" y="614.571"/>
+        <use xlink:href="#d" x="1360.783" y="614.571"/>
+        <use xlink:href="#o" x="1363.562" y="614.571"/>
+        <use xlink:href="#b" x="1368.562" y="614.571"/>
+        <use xlink:href="#c" x="1374.123" y="614.571"/>
+        <use xlink:href="#d" x="1379.123" y="614.571"/>
+        <use xlink:href="#j" x="1381.901" y="614.571"/>
+        <use xlink:href="#e" x="1384.123" y="614.571"/>
+        <use xlink:href="#k" x="1389.685" y="614.571"/>
+    </g>
+    <g>
+        <use xlink:href="#i" x="1395.246" y="614.571"/>
+    </g>
+    <g>
+        <use xlink:href="#o" x="1400.363" y="614.571"/>
+        <use xlink:href="#e" x="1405.363" y="614.571"/>
+        <use xlink:href="#n" x="1410.925" y="614.571"/>
+        <use xlink:href="#a" x="1413.146" y="614.571"/>
+        <use xlink:href="#b" x="1418.146" y="614.571"/>
+    </g>
+</svg>

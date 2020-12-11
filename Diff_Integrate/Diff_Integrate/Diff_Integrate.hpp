@@ -200,7 +200,7 @@ inline T gauss_integrate(const function_type &func,const pair<T,T>&_p,T eps=1e-5
          0.198431, -0.201194, 0.202578, 0., 0.198431, 0.201194, 0.186161, \
          0.394151, 0.166269, 0.570972, 0.139571, 0.724418, 0.107159, 0.848207, \
          0.070366, 0.937273, 0.0307532, 0.987993};
-    return rec_calc(func, _p, gauss_kronrod, calc_gauss(func,_p, gauss_kronrod),eps);
+    return rec_calc<decltype(func),T>(func, _p, gauss_kronrod, calc_gauss(func,_p, gauss_kronrod),eps);
 }
 template<typename function_type,typename T=double>
 inline T _gauss_integrate(const function_type &func,const pair<T,T>&_p,T eps=1e-5)
@@ -210,23 +210,23 @@ inline T _gauss_integrate(const function_type &func,const pair<T,T>&_p,T eps=1e-
          0.198431, -0.201194, 0.202578, 0., 0.198431, 0.201194, 0.186161, \
          0.394151, 0.166269, 0.570972, 0.139571, 0.724418, 0.107159, 0.848207, \
          0.070366, 0.937273, 0.0307532, 0.987993};
-    return _rec_calc(func, _p, gauss_kronrod, _calc_gauss(func,_p, gauss_kronrod),eps);
+    return _rec_calc<decltype(func),T>(func, _p, gauss_kronrod, _calc_gauss(func,_p, gauss_kronrod),eps);
 }
 template<typename function_type,typename T=double>
 inline T gauss_integrate(const function_type &func,const pair<T,T>&_p,const array<array<double,2>,15>&gauss_kronrod,T eps=1e-5)
 {
-    return _rec_calc(func, _p, gauss_kronrod, _calc_gauss(func,_p, gauss_kronrod),eps);
+    return _rec_calc<decltype(func),T>(func, _p, gauss_kronrod, _calc_gauss(func,_p, gauss_kronrod),eps);
 }
 template<typename function_type,typename T=double>
 inline T infinity_integrate(const function_type &func,char _mode='2',T _p=0.0,T eps=1e-5)
 {
     switch (_mode) {
         case'l':case '0':case'L':case 0:
-            return _gauss_integrate(func, {atan(_p),M_PI*0.5},eps);
+            return _gauss_integrate<decltype(func),T>(func, {atan(_p),M_PI*0.5},eps);
         case '1':case'u':case'U':case 1:
-            return _gauss_integrate(func,{-M_PI*0.5,atan(_p)},eps);
+            return _gauss_integrate<decltype(func),T>(func,{-M_PI*0.5,atan(_p)},eps);
         default:
-            return _gauss_integrate(func, {-M_PI*0.5,M_PI*0.5},eps);;
+            return _gauss_integrate<decltype(func),T>(func, {-M_PI*0.5,M_PI*0.5},eps);;
     }
 }
 template<typename function_type,typename T=double>
@@ -239,7 +239,7 @@ inline vector<T> gauss_integrate(const vector<function_type> &func_vector, const
             0.070366, 0.937273, 0.0307532, 0.987993};
         vector<T> result;
         for(auto &func:func_vector)
-            result.push_back(gauss_integrate(func, _p, gauss_kronrod,_eps));
+            result.push_back(gauss_integrate<decltype(func),T>(func, _p, gauss_kronrod,_eps));
         return result;
     }
 }

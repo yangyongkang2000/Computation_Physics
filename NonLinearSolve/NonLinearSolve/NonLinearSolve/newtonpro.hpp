@@ -11,7 +11,7 @@ namespace NonLinearSolve
 {
 using namespace std;
 template<typename zeros_type,typename equation_type,typename T=double>
-zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,T w=1e-9,double eps=1e-7,int nmax=1000)
+zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,T w=1e-9,T eps=1e-7,int nmax=1000)
 {
     int N=static_cast<int>(equation.size());
     vector<vector<T>> A_matrix(N,vector<T>(N));
