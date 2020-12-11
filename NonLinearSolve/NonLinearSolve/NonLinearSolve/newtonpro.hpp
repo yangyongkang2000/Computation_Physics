@@ -7,18 +7,16 @@
 
 #ifndef newtonpro_h
 #define newtonpro_h
-#include"secant_solve.hpp"
-#include"LU_Dolittle.hpp"
 namespace NonLinearSolve
 {
 using namespace std;
-template<unsigned int N,typename zeros_type,typename equation_type>
-zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,double w=1e-9,double eps=1e-7,int nmax=1000)
+template<typename zeros_type,typename equation_type,typename T=double>
+zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,T w=1e-9,double eps=1e-7,int nmax=1000)
 {
-    array<array<double, N>,N> A_matrix;
-    array<double,N> B_list;
-    vector<double> delta;
-    double sum,L;
+    int N=static_cast<int>(equation.size());
+    vector<vector<T>> A_matrix(N,vector<T>(N));
+    vector<T> delta,B_list(N);
+   T sum,L;
     for(int n=0;n<nmax;n++)
     {
         for(int i=0;i<N;B_list[i++]=-equation[i](zeros));
@@ -31,7 +29,7 @@ zeros_type newton_solve(const equation_type &equation,zeros_type &zeros,double w
                 A_matrix[i][j]=(L-equation[i](zeros))/(2*w);
                 zeros[j]+=w;
             }
-        delta=LinearSolve::LU_LinearSolve<N>(A_matrix, B_list);
+        delta=LinearSolve::LU_LinearSolve<decltype(A_matrix),decltype(B_list),T>(A_matrix, B_list);
         if(delta.size()==0)
             return zeros_type{};
         for(int i=0;i<N;i++)

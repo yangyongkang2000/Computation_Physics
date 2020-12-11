@@ -7,7 +7,6 @@
 
 #ifndef odesolve_h
 #define odesolve_h
-#include"include.hpp"
 namespace odesolve {
 using namespace std;
 template<typename vector_type,typename T=double>

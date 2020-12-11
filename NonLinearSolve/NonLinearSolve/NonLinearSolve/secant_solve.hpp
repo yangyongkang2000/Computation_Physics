@@ -7,7 +7,6 @@
 
 #ifndef secant_solve_h
 #define secant_solve_h
-#include"bitsection_solve.hpp"
 namespace NonLinearSolve {
 using namespace std;
 template<typename _equation>

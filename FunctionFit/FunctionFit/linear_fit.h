@@ -7,7 +7,6 @@
 
 #ifndef linear_fit_h
 #define linear_fit_h
-#include"lagrange_fit.hpp"
  namespace FunctionFit {
  using namespace std;
 template<typename array_type,typename T=double>

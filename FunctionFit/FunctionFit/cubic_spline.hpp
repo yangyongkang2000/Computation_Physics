@@ -7,8 +7,6 @@
 
 #ifndef cubic_spline_h
 #define cubic_spline_h
-#include"linear_fit.h"
-#include"tri.hpp"
 namespace FunctionFit {
 using namespace std;
 template<typename point_type,typename T=double>
@@ -65,6 +63,7 @@ inline auto cubic_spline_fit(const point_type &list) ->Interpolation<decltype(li
     }
     return Interpolation<decltype(list[0]),T>(list[0],result);
 }
+
 }
 
 #endif /* cubic_spline_h */

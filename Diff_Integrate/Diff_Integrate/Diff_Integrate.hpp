@@ -7,7 +7,6 @@
 
 #ifndef Diff_Integrate_h
 #define Diff_Integrate_h
-#include"include.hpp"
 namespace Diff_Integrate {
 using namespace std;
 template<typename T=double>

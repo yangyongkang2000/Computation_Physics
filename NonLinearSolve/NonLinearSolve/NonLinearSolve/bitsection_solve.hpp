@@ -7,7 +7,6 @@
 
 #ifndef bitsection_solve_h
 #define bitsection_solve_h
-#include"include.hpp"
 namespace NonLinearSolve
 {
 using namespace std;
