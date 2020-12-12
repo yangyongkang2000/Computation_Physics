@@ -29,7 +29,7 @@ inline T coeff_point(const _coeff_type &_coeff_list,const T &x)
     _x[N-1]=1;
     for(int i=N-2;i>=0;i--)
     _x[i]=_x[i+1]*x;
-    return inner_product(_x.begin(), _x.end(), _coeff_list.begin(), 0);
+    return inner_product(_x.begin(), _x.end(), _coeff_list.begin(), static_cast<T>(0));
 }
 template<typename  _coeff_type,typename T=double>
 inline vector<array<T,2>> coeff_list(const _coeff_type &_coeff_list, pair<double,double>_p,double step=0.01)
