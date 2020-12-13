@@ -14,3 +14,7 @@
 
 (* ::Input:: *)
 (*LagrangeFit=LibraryFunctionLoad["/Users/yangyongkang/Library/Developer/Xcode/DerivedData/FunctionFit-ardixwauxvybeidnwcenucytbntr/Build/Products/Release/libFunctionFit.dylib","LagrangeFit",{{Real,2}},{Real,1}];*)
+
+
+(* ::Input:: *)
+(*LinearFit=LibraryFunctionLoad["/Users/yangyongkang/Library/Developer/Xcode/DerivedData/FunctionFit-ardixwauxvybeidnwcenucytbntr/Build/Products/Release/libFunctionFit.dylib","LinearFit",{{Real,2}},{Real,1}];*)

@@ -7,6 +7,7 @@
 
 #include "include.hpp"
 #include "LU_Dolittle.hpp"
+#include"linear_fit.h"
 #include"tri.hpp"
 #include "lagrange_fit.hpp"
 #include "cubic_spline.hpp"
@@ -82,5 +83,25 @@ EXTERN_C DLLEXPORT int LagrangeFit(WolframLibraryData libData, mint Argc, MArgum
     for(int i=0;i<*dims;i++)
       _v[i]=result[i];
     MArgument_setMTensor(Res, _tensor);
+    return LIBRARY_NO_ERROR;
+}
+EXTERN_C DLLEXPORT int LinearFit(WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+{
+    using namespace std;
+    MTensor tensor=MArgument_getMTensor(Args[0]),new_tensor;
+    double *v=libData->MTensor_getRealData(tensor);
+    const mint *dims=libData->MTensor_getDimensions(tensor);
+    vector<vector<double>> list(dims[0]);
+    for(int i=0;i<*dims;i++)
+    for(int j=0;j<dims[1];j++)
+    {
+        list[i].push_back(v[dims[0]*i+j]);
+    }
+    auto result=FunctionFit::linear_fit(list);
+    libData->MTensor_new(MType_Real,1,dims,&new_tensor);
+    double *new_v=libData->MTensor_getRealData(new_tensor);
+    for(int i=0;i<*dims;i++)
+    new_v[i]=result[i];
+    MArgument_setMTensor(Res, new_tensor);
     return LIBRARY_NO_ERROR;
 }

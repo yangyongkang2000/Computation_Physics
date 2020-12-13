@@ -16,6 +16,7 @@
 		FCDEE80E2583A1D5008D5C79 /* lagrange_fit.hpp in Sources */ = {isa = PBXBuildFile; fileRef = FCDEE80125839CC1008D5C79 /* lagrange_fit.hpp */; };
 		FCDEE8112583A339008D5C79 /* LU_Dolittle.hpp in Headers */ = {isa = PBXBuildFile; fileRef = FCDEE8102583A339008D5C79 /* LU_Dolittle.hpp */; };
 		FCDEE8142583A382008D5C79 /* tri.hpp in Headers */ = {isa = PBXBuildFile; fileRef = FCDEE8132583A382008D5C79 /* tri.hpp */; };
+		FCDEE81C2584C8F8008D5C79 /* linear_fit.h in Headers */ = {isa = PBXBuildFile; fileRef = FCDEE81B2584C8F8008D5C79 /* linear_fit.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		FCDEE80725839CED008D5C79 /* include.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = include.hpp; path = ../../../LinearSolve/LinearSolve/include.hpp; sourceTree = "<group>"; };
 		FCDEE8102583A339008D5C79 /* LU_Dolittle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LU_Dolittle.hpp; path = ../../../LinearSolve/LinearSolve/LU_Dolittle.hpp; sourceTree = "<group>"; };
 		FCDEE8132583A382008D5C79 /* tri.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = tri.hpp; path = ../../../LinearSolve/LinearSolve/tri.hpp; sourceTree = "<group>"; };
+		FCDEE81B2584C8F8008D5C79 /* linear_fit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linear_fit.h; path = ../../../FunctionFit/FunctionFit/linear_fit.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 		FCDEE7E625839477008D5C79 /* FunctionFit */ = {
 			isa = PBXGroup;
 			children = (
+				FCDEE81B2584C8F8008D5C79 /* linear_fit.h */,
 				FCDEE8132583A382008D5C79 /* tri.hpp */,
 				FCDEE8102583A339008D5C79 /* LU_Dolittle.hpp */,
 				FCDEE80725839CED008D5C79 /* include.hpp */,
@@ -78,6 +81,7 @@
 				FCDEE80525839CDA008D5C79 /* cubic_spline.hpp in Headers */,
 				FCDEE80825839CED008D5C79 /* include.hpp in Headers */,
 				FCDEE8112583A339008D5C79 /* LU_Dolittle.hpp in Headers */,
+				FCDEE81C2584C8F8008D5C79 /* linear_fit.h in Headers */,
 				FCDEE8142583A382008D5C79 /* tri.hpp in Headers */,
 				FCDEE80225839CC1008D5C79 /* lagrange_fit.hpp in Headers */,
 			);
