@@ -64,6 +64,27 @@ EXTERN_C DLLEXPORT int CubicSplineCalc(WolframLibraryData libData, mint Argc, MA
     MArgument_setMTensor(Res, new_tensor);
     return LIBRARY_NO_ERROR;
 }
+EXTERN_C DLLEXPORT int DerivativeCubicSplineCalc(WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
+{
+    using namespace std;
+    MTensor tensor1=MArgument_getMTensor(Args[0]),tensor2=MArgument_getMTensor(Args[1]),new_tensor;
+    mbool _b=MArgument_getBoolean(Args[2]);
+    const mint *dims1=libData->MTensor_getDimensions(tensor1),*dims2=libData->MTensor_getDimensions(tensor2);
+    auto ipf=FunctionFit::Interpolation<vector<double>>();
+    double *v1=libData->MTensor_getRealData(tensor1),*v2=libData->MTensor_getRealData(tensor2);
+    for(int i=0;i<*dims1;i++)
+    {
+        ipf._list_.push_back(v1[6*i+4]);
+        ipf._result_.push_back({v1[6*i],v1[6*i+1],v1[6*i+2],v1[6*i+3]});
+    }
+    ipf._list_.push_back(v1[6*(*dims1-1)+5]);
+    libData->MTensor_new(MType_Real,1,dims2,&new_tensor);
+    double *new_v=libData->MTensor_getRealData(new_tensor);
+    for(int i=0;i<*dims2;i++)
+    new_v[i]=ipf.derivative(v2[i], _b);
+    MArgument_setMTensor(Res, new_tensor);
+    return LIBRARY_NO_ERROR;
+}
 EXTERN_C DLLEXPORT int LagrangeFit(WolframLibraryData libData, mint Argc, MArgument *Args, MArgument Res)
 {
     using namespace std;

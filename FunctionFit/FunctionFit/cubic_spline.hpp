@@ -25,6 +25,17 @@ public:
             return coeff_point<decltype(_result_[0]),T>(_result_[_result_.size()-1],x);
         return coeff_point<decltype(_result_[0]),T>(_result_[distance(_list_.begin(), lower_bound(_list_.begin(), _list_.end(), x))-1], x);
     }
+    T derivative(T &x,bool _b)
+    {
+        if(_list_.size()==0)
+            return 0.0;
+        auto _func=_b?[](const array<T,4> &_coeff,const T &x){  return 6*_coeff[0]*x+2*_coeff[1];}:[](const array<T,4> &_coeff,const T &x){return _coeff[0]*pow(x,2.0)*3+2*_coeff[1]*x+_coeff[2];};
+        if(x<=_list_[0])
+            return _func(_result_[0],x);
+        if(x>=_list_[_list_.size()-1])
+            return _func(_result_[_result_.size()-1],x);
+        return  _func(_result_[distance(_list_.begin(), lower_bound(_list_.begin(), _list_.end(), x))-1], x);
+    }
     point_type _list_;
     vector<array<T,4>> _result_;
 };
