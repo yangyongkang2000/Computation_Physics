@@ -63,10 +63,6 @@ public:
                list.push_back((4*calc___<N>(func, {x,eps})-calc___<N>(func, {x,2.0*eps}))/3.0);
         return list;
     }
-    void print(int n)
-    {
-        for(int i=0;i<=2*n;cout<<(_p.first)[i++]<<endl);
-    }
 private:
     template<unsigned int N,typename function_type>
    inline T calc___(const function_type &func,const pair<T,T> &__p)
